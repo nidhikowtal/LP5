@@ -4,70 +4,65 @@
 
 using namespace std;
 
-
-    
-
-
-
-void sequential_bubble_sort(int arr[],int size){
-    int array[size];
-    for(int i = 0 ; i < size; i++){
-        array[i] = arr[i];
+void sequential_bubble_sort(int arr[],int n){
+    int temp[n];
+    for(int i = 0 ; i < n; i++){
+        temp[i] = arr[i];
     }
 
   
-    for(int i = 0; i < size - 1; i ++){
-        for(int j = 0; j < size - i - 1; j++){
-            if(array[j] > array[j+1]){
-                swap(array[j],array[j+1]);
+    for(int i = 0; i < n - 1; i ++){
+        for(int j = 0; j < n - i - 1; j++){
+            if(temp[j] > temp[j+1]){
+                swap(temp[j],temp[j+1]);
             }
         }
     }
     
     cout << "Sequential Bubble Sort:\n";
-    // for(int i = 0 ; i < size; i++){
-    //     cout << array[i] << " ";
-    // }
+    for(int i = 0 ; i < n; i++){
+        cout << temp[i] << " ";
+    }
     cout << endl;
     
 
 }
 
-void parallel_bubble_sort(int arr[],int size){
-    int array[size];
-    for(int i = 0 ; i < size; i++){
-        array[i] = arr[i];
+void parallel_bubble_sort(int arr[],int n){
+    int temp[n];
+    for(int i = 0 ; i < n; i++){
+        temp[i] = arr[i];
     }
     
-    for(int k = 0; k < size;k ++){
+    for(int k = 0; k < n;k ++){
         if(k % 2 == 0){
             #pragma omp parallel for
-                for(int i = 1; i < size - 1; i += 2){
-                    if(array[i] > array[i+1]){
-                        swap(array[i],array[i+1]);
+                for(int i = 1; i < n - 1; i += 2){
+                    if(temp[i] > temp[i+1]){
+                        swap(temp[i],temp[i+1]);
                     }
                 }
         }
         else{
             #pragma omp parallel for
-                for(int i = 0; i < size - 1; i += 2){
-                    if(array[i] > array[i+1]){
-                        swap(array[i],array[i+1]);
+                for(int i = 0; i < n - 1; i += 2){
+                    if(temp[i] > temp[i+1]){
+                        swap(temp[i],temp[i+1]);
                     }
                 }
         }
     }
     
     cout << "Parallel Bubble Sort:\n";
-    // for(int i = 0 ; i < size; i++){
-    //     cout << array[i] << " ";
-    // }
+    for(int i = 0 ; i < n; i++){
+        cout << temp[i] << " ";
+    }
     cout << endl;
     
 }
 
-void merge(int array[],int low, int mid, int high,int size){
-    int temp[size];
+void merge(int array[],int low, int mid, int high,int n){
+    int temp[n];
     int i = low;
     int j = mid + 1;
     int k = 0;
@@ -101,56 +96,57 @@ void merge(int array[],int low, int mid, int high,int size){
     }
 }
 
-void mergesort(int array[],int low,int high,int size){
+void mergesort(int arr[],int low,int high,int n){
     if(low < high){
         int mid = (low + high) / 2;
-        mergesort(array,low,mid,size);
-        mergesort(array,mid+1,high,size);
-        merge(array,low,mid,high,size);
+        mergesort(arr,low,mid,n);
+        mergesort(arr,mid+1,high,n);
+        merge(arr,low,mid,high,n);
     }
 }
 
-void perform_merge_sort(int arr[],int size){
-    int array[size];
-    for(int i = 0 ; i < size; i++){
-        array[i] = arr[i];
+void perform_merge_sort(int arr[],int n){
+    int temp[n];
+    for(int i = 0 ; i < n; i++){
+        temp[i] = arr[i];
     }
     
-    mergesort(array,0,size-1,size);
+    mergesort(temp,0,n-1,n);
    
     cout << "Merge Sort:\n";
-    // for(int i = 0 ; i < size; i++){
-    //     cout << array[i] << " ";
-    // }
+    for(int i = 0 ; i < n; i++){
+        cout << temp[i] << " ";
+    }
     cout << endl;
     
 }
 
-void p_mergesort(int array[],int low,int high,int size){
+void p_mergesort(int array[],int low,int high,int n){
     if(low < high){
         int mid = (low + high) / 2;
         #pragma omp parallel sections
         {
             #pragma omp section
-                p_mergesort(array,low,mid,size);
+                p_mergesort(array,low,mid,n);
             #pragma omp section
-                p_mergesort(array,mid+1,high,size);
+                p_mergesort(array,mid+1,high,n);
         }
-        merge(array,low,mid,high,size);
+        merge(array,low,mid,high,n);
     }
 }
 
-void perform_p_merge_sort(int arr[],int size){
-    int array[size];
-    for(int i = 0 ; i < size; i++){
+void perform_p_merge_sort(int arr[],int n){
+    int array[n];
+    for(int i = 0 ; i < n; i++){
         array[i] = arr[i];
     }
    
-    p_mergesort(array,0,size-1,size);
+    p_mergesort(array,0,n-1,n);
    
-    // for(int i = 0 ; i < size; i++){
-    //     cout << array[i] << " ";
-    // }
+    cout << "Parallel Merge Sort:\n";
+    for(int i = 0 ; i < n; i++){
+        cout << array[i] << " ";
+    }
     cout << endl;
     
 }
@@ -159,22 +155,23 @@ void perform_p_merge_sort(int arr[],int size){
 
 int main(int argc, char const *argv[])
 {
-    int SIZE;
-    int MAX = 1000;
-    cout << "Enter size of array: ";
-    cin >> SIZE;
-    int array[SIZE];
-    for(int i = 0 ; i < SIZE; i ++){
-        array[i] = rand() % MAX;
+    // int n;
+    // int MAX = 1000;
+    int n;
+    cout << "Enter n of array: ";
+    cin >> n;
+    int arr[n];
+    int temp;
+    for(int i = 0 ; i < n; i ++){
+        cout<<"Enter element: ";
+        cin>>temp;
+        arr[i]=temp;
     }
-    // cout << "Initial Array:\n";
-    // for(int i = 0 ; i < SIZE; i++){
-    //     cout << array[i] << " ";
-    // }
     cout << endl;
-    sequential_bubble_sort(array,SIZE);
-    parallel_bubble_sort(array,SIZE);
-    perform_merge_sort(array,SIZE);
-    perform_p_merge_sort(array,SIZE);
+    sequential_bubble_sort(arr,n);
+    parallel_bubble_sort(arr,n);
+    perform_merge_sort(arr,n);
+    perform_p_merge_sort(arr,n);
+
     return 0;
 }
