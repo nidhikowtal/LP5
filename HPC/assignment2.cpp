@@ -19,7 +19,7 @@ void sequential_bubble_sort(int arr[],int n){
         }
     }
     
-    cout << "Sequential Bubble Sort:\n";
+    cout << "Sequential Bubble  Sort: "<<endl;;
     for(int i = 0 ; i < n; i++){
         cout << temp[i] << " ";
     }
@@ -53,7 +53,7 @@ void parallel_bubble_sort(int arr[],int n){
         }
     }
     
-    cout << "Parallel Bubble Sort:\n";
+    cout << "Parallel Bubble  Sort: "<<endl;;
     for(int i = 0 ; i < n; i++){
         cout << temp[i] << " ";
     }
@@ -113,7 +113,7 @@ void perform_merge_sort(int arr[],int n){
     
     mergesort(temp,0,n-1,n);
    
-    cout << "Merge Sort:\n";
+    cout << "Merge  Sort: "<<endl;;
     for(int i = 0 ; i < n; i++){
         cout << temp[i] << " ";
     }
@@ -143,7 +143,7 @@ void perform_p_merge_sort(int arr[],int n){
    
     p_mergesort(array,0,n-1,n);
    
-    cout << "Parallel Merge Sort:\n";
+    cout << "Parallel Merge  Sort: "<<endl;;
     for(int i = 0 ; i < n; i++){
         cout << array[i] << " ";
     }
