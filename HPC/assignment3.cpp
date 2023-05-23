@@ -1,61 +1,73 @@
 #include <iostream>
-#include <vector>
 #include <omp.h>
-#include <chrono>
+#include <bits/stdc++.h>
 
-int main() {
-    std::vector<int> numbers = {10, 5, 7, 15, 3, 9, 12, 8};
+using namespace std;
 
-    // Serial Operations
-    int min_val_serial = numbers[0];
-    int max_val_serial = numbers[0];
+void serial_operations(vector<int> &arr, int n)
+{
+    int min_val_serial = arr[0];
+    int max_val_serial = arr[0];
     int sum_serial = 0;
 
-    auto start_serial = std::chrono::high_resolution_clock::now();
+    auto start_serial = chrono::high_resolution_clock::now();
 
-    for (int i = 0; i < numbers.size(); i++) {
-        min_val_serial = std::min(min_val_serial, numbers[i]);
-        max_val_serial = std::max(max_val_serial, numbers[i]);
-        sum_serial += numbers[i];
+    for (int i = 0; i < n; i++)
+    {
+        min_val_serial = min(min_val_serial, arr[i]);
+        max_val_serial = max(max_val_serial, arr[i]);
+        sum_serial += arr[i];
     }
 
-    double average_serial = static_cast<double>(sum_serial) / numbers.size();
+    double average_serial = (double)sum_serial / n;
 
-    auto end_serial = std::chrono::high_resolution_clock::now();
-    auto duration_serial = std::chrono::duration_cast<std::chrono::microseconds>(end_serial - start_serial);
+    auto end_serial = chrono::high_resolution_clock::now();
+    auto duration_serial = chrono::duration_cast<chrono::microseconds>(end_serial - start_serial);
 
-    std::cout << "Serial Results:" << std::endl;
-    std::cout << "Minimum value: " << min_val_serial << std::endl;
-    std::cout << "Maximum value: " << max_val_serial << std::endl;
-    std::cout << "Sum: " << sum_serial << std::endl;
-    std::cout << "Average: " << average_serial << std::endl;
-    std::cout << "Serial Execution Time: " << duration_serial.count() << " microseconds" << std::endl;
+    cout << "Serial Results:" << endl;
+    cout << "Minimum value: " << min_val_serial << endl;
+    cout << "Maximum value: " << max_val_serial << endl;
+    cout << "Sum: " << sum_serial << endl;
+    cout << "Average: " << average_serial << endl;
+    cout << "Serial Execution Time: " << duration_serial.count() << " microseconds" << endl;
+}
 
-    // Parallel Operations
-    int min_val_parallel = numbers[0];
-    int max_val_parallel = numbers[0];
+void parallel_operations(vector<int> &arr, int n)
+{
+    int min_val_parallel = arr[0];
+    int max_val_parallel = arr[0];
     int sum_parallel = 0;
 
-    auto start_parallel = std::chrono::high_resolution_clock::now();
+    auto start_parallel = chrono::high_resolution_clock::now();
 
-    #pragma omp parallel for reduction(min:min_val_parallel) reduction(max:max_val_parallel) reduction(+:sum_parallel)
-    for (int i = 0; i < numbers.size(); i++) {
-        min_val_parallel = std::min(min_val_parallel, numbers[i]);
-        max_val_parallel = std::max(max_val_parallel, numbers[i]);
-        sum_parallel += numbers[i];
+#pragma omp parallel for reduction(min : min_val_parallel) reduction(max : max_val_parallel) reduction(+ : sum_parallel)
+    for (int i = 0; i < n; i++)
+    {
+        min_val_parallel = min(min_val_parallel, arr[i]);
+        max_val_parallel = max(max_val_parallel, arr[i]);
+        sum_parallel += arr[i];
     }
 
-    double average_parallel = static_cast<double>(sum_parallel) / numbers.size();
+    double average_parallel = (double)sum_parallel / n;
 
-    auto end_parallel = std::chrono::high_resolution_clock::now();
-    auto duration_parallel = std::chrono::duration_cast<std::chrono::microseconds>(end_parallel - start_parallel);
+    auto end_parallel = chrono::high_resolution_clock::now();
+    auto duration_parallel = chrono::duration_cast<chrono::microseconds>(end_parallel - start_parallel);
 
-    std::cout << "\nParallel Results:" << std::endl;
-    std::cout << "Minimum value: " << min_val_parallel << std::endl;
-    std::cout << "Maximum value: " << max_val_parallel << std::endl;
-    std::cout << "Sum: " << sum_parallel << std::endl;
-    std::cout << "Average: " << average_parallel << std::endl;
-    std::cout << "Parallel Execution Time: " << duration_parallel.count() << " microseconds" << std::endl;
+    cout << "\nParallel Results:" << endl;
+    cout << "Minimum value: " << min_val_parallel << endl;
+    cout << "Maximum value: " << max_val_parallel << endl;
+    cout << "Sum: " << sum_parallel << endl;
+    cout << "Average: " << average_parallel << endl;
+    cout << "Parallel Execution Time: " << duration_parallel.count() << " microseconds" << endl;
+}
+int main()
+{
+    vector<int> arr = {10, 5, 7, 15, 3, 9, 12, 8};
+
+    int n = arr.size();
+
+    serial_operations(arr, n);
+    parallel_operations(arr, n);
 
     return 0;
 }
