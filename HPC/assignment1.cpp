@@ -9,6 +9,7 @@ class Graph
 public:
     int vertices = 6;
     int edges = 5;
+
     vector<vector<int>> graph = {{1}, {0, 2, 3}, {1, 4, 5}, {1, 4}, {2, 3}, {2}};
     vector<bool> visited;
 
@@ -25,7 +26,7 @@ public:
         }
     }
 
-    void initialize_visited()
+    void initializeVisited()
     {
         visited.assign(vertices, false);
     }
@@ -64,16 +65,15 @@ public:
             cout << current << " ";
 #pragma omp critical
             s.pop();
+
 #pragma omp parallel for
             for (auto j = graph[current].begin(); j != graph[current].end(); j++)
             {
                 if (visited[*j] == false)
                 {
 #pragma omp critical
-                    {
-                        s.push(*j);
-                        visited[*j] = true;
-                    }
+                    s.push(*j);
+                    visited[*j] = true;
                 }
             }
         }
@@ -85,11 +85,12 @@ public:
         q.push(i);
         visited[i] = true;
 
-        while (q.empty() != true)
+        while (!q.empty())
         {
             int current = q.front();
-            q.pop();
             cout << current << " ";
+            q.pop();
+
             for (auto j = graph[current].begin(); j != graph[current].end(); j++)
             {
                 if (visited[*j] == false)
@@ -107,11 +108,11 @@ public:
         q.push(i);
         visited[i] = true;
 
-        while (q.empty() != true)
+        while (!q.empty())
         {
-
             int current = q.front();
             cout << current << " ";
+
 #pragma omp critical
             q.pop();
 
@@ -120,7 +121,6 @@ public:
             {
                 if (visited[*j] == false)
                 {
-#pragma omp critical
                     q.push(*j);
                     visited[*j] = true;
                 }
@@ -129,38 +129,41 @@ public:
     }
 };
 
-int main(int argc, char const *argv[])
+int main()
 {
     Graph g;
-    cout << "Adjacency List:\n";
+    cout << "Adjacency List: " << endl;
     g.printGraph();
-    g.initialize_visited();
-    cout << "Depth First Search: \n";
+
+    g.initializeVisited();
+    cout << "DFS: " << endl;
     auto start = chrono::high_resolution_clock::now();
     g.dfs(0);
     cout << endl;
     auto end = chrono::high_resolution_clock::now();
     cout << "Time taken: " << chrono::duration_cast<chrono::microseconds>(end - start).count() << " microseconds" << endl;
-    cout << "Parallel Depth First Search: \n";
-    g.initialize_visited();
+
+    g.initializeVisited();
+    cout << "Parallel DFS: " << endl;
     start = chrono::high_resolution_clock::now();
     g.parallel_dfs(0);
     cout << endl;
     end = chrono::high_resolution_clock::now();
     cout << "Time taken: " << chrono::duration_cast<chrono::microseconds>(end - start).count() << " microseconds" << endl;
+
+    g.initializeVisited();
+    cout << "BFS: " << endl;
     start = chrono::high_resolution_clock::now();
-    cout << "Breadth First Search: \n";
-    g.initialize_visited();
     g.bfs(0);
     cout << endl;
     end = chrono::high_resolution_clock::now();
     cout << "Time taken: " << chrono::duration_cast<chrono::microseconds>(end - start).count() << " microseconds" << endl;
+
+    g.initializeVisited();
+    cout << "Parallel BFS: " << endl;
     start = chrono::high_resolution_clock::now();
-    cout << "Parallel Breadth First Search: \n";
-    g.initialize_visited();
     g.parallel_bfs(0);
     cout << endl;
     end = chrono::high_resolution_clock::now();
     cout << "Time taken: " << chrono::duration_cast<chrono::microseconds>(end - start).count() << " microseconds" << endl;
-    return 0;
 }
