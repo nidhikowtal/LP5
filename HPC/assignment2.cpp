@@ -138,9 +138,9 @@ void parallel_merge_sort(int arr[], int low, int high, int n)
 #pragma omp parallel sections
         {
 #pragma omp section
-            merge_sort(arr, low, mid, n);
+            parallel_merge_sort(arr, low, mid, n);
 #pragma omp section
-            merge_sort(arr, mid + 1, high, n);
+            parallel_merge_sort(arr, mid + 1, high, n);
         }
         merge(arr, low, mid, high, n);
     }
