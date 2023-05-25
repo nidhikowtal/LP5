@@ -6,5 +6,5 @@ g++ -fopenmp assignment2.cpp -o assignment2 <br />
 
 For CUDA - 
 <br/>
-nvcc matadd.cu matadd <br />
+nvcc matadd.cu -o matadd <br />
 ./matadd
